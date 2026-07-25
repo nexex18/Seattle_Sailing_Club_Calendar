@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seattle Sailing Club — Upcoming Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F2E8;
+  --paper-deep:#EFE7D6;
+  --ink:#102A40;
+  --ink-soft:#51677B;
+  --line:rgba(16,42,64,.18);
+  --line-soft:rgba(16,42,64,.09);
+  --accent:#D9481F;
+  --sea:#166D8A;
+  --open:#1E7A4C;
+  --open-bg:#DCEDE2;
+  --full-bg:#F6DFD7;
+  --amber:#8A6414;
+  --amber-bg:#F1E7C8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Archivo",sans-serif;
+  color:var(--ink);
+  background:
+    repeating-linear-gradient(0deg, var(--line-soft) 0 1px, transparent 1px 56px),
+    repeating-linear-gradient(90deg, var(--line-soft) 0 1px, transparent 1px 56px),
+    var(--paper);
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+
+/* ---------- masthead ---------- */
+header{
+  border-bottom:3px double var(--ink);
+  padding:2.6rem clamp(1rem,4vw,3rem) 1.6rem;
+  position:relative;
+  overflow:hidden;
+}
+.overline{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+}
+.overline::before{content:"";display:inline-block;width:2.4rem;height:2px;background:var(--accent)}
+h1{
+  font-family:"Fraunces",serif;
+  font-weight:600;
+  font-size:clamp(2.2rem,6vw,4.2rem);
+  letter-spacing:-.015em;
+  line-height:1.02;
+  margin:.4rem 0 .2rem;
+}
+h1 em{font-style:italic;font-weight:400;color:var(--sea)}
+.sub{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.78rem;
+  color:var(--ink-soft);
+  margin-top:.6rem;
+}
+.stats{
+  display:flex;flex-wrap:wrap;gap:0;
+  margin-top:1.4rem;
+  border:1.5px solid var(--ink);
+  background:var(--paper);
+  width:fit-content;
+}
+.stats div{
+  padding:.55rem 1.1rem;
+  border-right:1.5px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.74rem;
+  letter-spacing:.04em;
+}
+.stats div:last-child{border-right:0}
+.stats b{
+  display:block;
+  font-family:"Fraunces",serif;
+  font-size:1.5rem;
+  font-weight:600;
+  letter-spacing:0;
+}
+.stats .st-open b{color:var(--open)}
+.stats .st-full b{color:var(--accent)}
+.compass{
+  position:absolute;right:clamp(-4rem,2vw,3rem);top:-2.5rem;
+  width:15rem;height:15rem;opacity:.13;pointer-events:none;
+}
+
+/* ---------- group planner ---------- */
+.plan{
+  margin:0 clamp(1rem,4vw,3rem);
+  transform:translateY(-1.5px);
+  border:1.5px solid var(--ink);
+  border-top:3px double var(--ink);
+  background:var(--paper-deep);
+  box-shadow:4px 4px 0 var(--line);
+  padding:1rem 1.2rem 1.1rem;
+  position:relative;
+}
+.plan-head{
+  font-family:"Fraunces",serif;
+  font-size:1.25rem;font-weight:600;
+  margin-bottom:.7rem;
+}
+.plan-head em{font-style:italic;font-weight:400;color:var(--sea)}
+.plan-head .anchor{color:var(--accent);margin-right:.3rem}
+.plan-controls{display:flex;flex-wrap:wrap;gap:1rem 1.8rem;align-items:flex-end}
+.ctl label{
+  display:block;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:.35rem;
+}
+.stepper{display:flex;align-items:stretch;border:1.5px solid var(--ink);background:var(--paper)}
+.stepper button{
+  font-family:"IBM Plex Mono",monospace;font-size:1rem;font-weight:600;
+  width:2rem;border:0;background:transparent;color:var(--ink);cursor:pointer;
+}
+.stepper button:hover{background:var(--ink);color:var(--paper)}
+.stepper .val{
+  font-family:"Fraunces",serif;font-size:1.25rem;font-weight:600;
+  min-width:2.4rem;text-align:center;align-self:center;
+  border-left:1.5px solid var(--ink);border-right:1.5px solid var(--ink);
+  padding:.15rem 0;
+}
+.plan select{
+  font-family:"IBM Plex Mono",monospace;font-size:.76rem;
+  padding:.5rem .6rem;
+  border:1.5px solid var(--ink);border-radius:0;
+  background:var(--paper);color:var(--ink);
+  -webkit-appearance:none;appearance:none;
+  cursor:pointer;
+}
+.rolechips{display:flex;gap:.4rem}
+.plan-summary{
+  flex:1;min-width:14rem;
+  font-family:"IBM Plex Mono",monospace;font-size:.74rem;
+  color:var(--ink-soft);
+  padding-bottom:.4rem;
+}
+.plan-summary b{color:var(--open);font-size:.95rem}
+.plan-summary.none b{color:var(--accent)}
+.plan-reset{
+  font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.1em;
+  text-transform:uppercase;
+  background:none;border:0;cursor:pointer;
+  color:var(--accent);text-decoration:underline;
+  padding-bottom:.5rem;
+  display:none;
+}
+.plan.active .plan-reset{display:inline}
+.plan.active{border-color:var(--accent);border-top-color:var(--accent)}
+
+/* ---------- filter bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:10;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(6px);
+  border-bottom:1.5px solid var(--ink);
+  padding:.7rem clamp(1rem,4vw,3rem);
+  display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;
+}
+.search{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.8rem;
+  padding:.5rem .8rem;
+  border:1.5px solid var(--ink);
+  background:var(--paper);
+  color:var(--ink);
+  width:15rem;max-width:100%;
+}
+.search:focus{outline:2px solid var(--sea);outline-offset:1px}
+.chip{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.7rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  padding:.45rem .75rem;
+  border:1.5px solid var(--ink);
+  background:var(--paper);
+  color:var(--ink);
+  cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.chip:hover{background:var(--paper-deep)}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.toggle.on{background:var(--open);border-color:var(--open);color:#fff}
+.spacer{flex:1}
+.count{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;color:var(--ink-soft);
+}
+
+/* ---------- month nav ---------- */
+.monthnav{
+  display:flex;flex-wrap:wrap;gap:.4rem;
+  padding:.8rem clamp(1rem,4vw,3rem) 0;
+}
+.monthnav a{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;
+  padding:.3rem .6rem;
+  border-bottom:2px solid transparent;
+  color:var(--ink-soft);
+}
+.monthnav a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- agenda ---------- */
+main{padding:0 clamp(1rem,4vw,3rem) 5rem;max-width:70rem}
+.month{
+  font-family:"Fraunces",serif;
+  font-style:italic;font-weight:500;
+  font-size:clamp(1.6rem,3.5vw,2.3rem);
+  color:var(--sea);
+  margin:2.6rem 0 .4rem;
+  padding-bottom:.3rem;
+  border-bottom:1.5px solid var(--ink);
+  scroll-margin-top:4.5rem;
+}
+.day{
+  display:grid;
+  grid-template-columns:5.2rem 1fr;
+  gap:1.2rem;
+  padding:1.15rem 0;
+  border-bottom:1px solid var(--line);
+}
+.datecell{text-align:center;padding-top:.2rem}
+.datecell .dow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);
+}
+.datecell .num{
+  font-family:"Fraunces",serif;
+  font-size:2.3rem;font-weight:600;line-height:1;
+}
+.datecell.today .num{color:var(--accent)}
+.datecell .today-tag{
+  font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+  letter-spacing:.15em;color:var(--accent);
+}
+.evlist{display:flex;flex-direction:column;gap:.6rem}
+.ev{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .9rem;
+  border:1.5px solid var(--ink);
+  background:var(--paper);
+  padding:.7rem .9rem;
+  box-shadow:3px 3px 0 var(--line);
+  transition:transform .12s, box-shadow .12s;
+}
+.ev:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--line)}
+.ev.dim{opacity:.62}
+.ev .time{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.74rem;font-weight:600;white-space:nowrap;
+  min-width:7.2rem;
+}
+.ev .name{font-weight:600;font-size:.94rem}
+.ev .headline{color:var(--ink-soft);font-size:.82rem}
+.ev .cat{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--sea);
+  border:1px solid var(--sea);
+  padding:.12rem .4rem;
+}
+.ev .multi{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.62rem;letter-spacing:.08em;
+  color:var(--amber);
+}
+.ev .grow{flex:1}
+.pill{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:.32rem .6rem;
+  white-space:nowrap;
+}
+.pill.open{background:var(--open-bg);color:var(--open)}
+.pill.full{background:var(--full-bg);color:var(--accent)}
+.pill.call{background:var(--amber-bg);color:var(--amber)}
+.pill.closed{background:var(--paper-deep);color:var(--ink-soft)}
+.book{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  text-decoration:none;
+  background:var(--ink);color:var(--paper);
+  padding:.45rem .8rem;
+  white-space:nowrap;
+  transition:background .15s;
+}
+.book:hover{background:var(--accent)}
+.empty{
+  margin:4rem 0;text-align:center;
+  font-family:"Fraunces",serif;font-style:italic;
+  font-size:1.4rem;color:var(--ink-soft);
+}
+footer{
+  border-top:3px double var(--ink);
+  padding:1.2rem clamp(1rem,4vw,3rem) 2.5rem;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;color:var(--ink-soft);
+}
+footer code{background:var(--paper-deep);padding:.15rem .4rem}
+@media(max-width:640px){
+  .day{grid-template-columns:3.4rem 1fr;gap:.7rem}
+  .datecell .num{font-size:1.7rem}
+  .ev .time{min-width:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="compass" viewBox="0 0 100 100" fill="none" stroke="#102A40">
+    <circle cx="50" cy="50" r="46" stroke-width="1"/>
+    <circle cx="50" cy="50" r="38" stroke-width=".5"/>
+    <path d="M50 4 L54 46 L50 50 L46 46 Z" fill="#102A40" stroke="none"/>
+    <path d="M50 96 L54 54 L50 50 L46 54 Z" stroke-width=".7"/>
+    <path d="M4 50 L46 46 L50 50 L46 54 Z" stroke-width=".7"/>
+    <path d="M96 50 L54 46 L50 50 L54 54 Z" stroke-width=".7"/>
+    <g stroke-width=".4"><path d="M50 12 V20 M50 80 V88 M12 50 H20 M80 50 H88"/></g>
+  </svg>
+  <div class="overline">Fareharbor Availability Harvest</div>
+  <h1>Seattle Sailing <em>Club</em></h1>
+  <div class="sub" id="sub"></div>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section class="plan" id="plan">
+  <div class="plan-head"><span class="anchor">⚓</span>Plan for <em>my group</em></div>
+  <div class="plan-controls">
+    <div class="ctl">
+      <label>People</label>
+      <div class="stepper">
+        <button id="pMinus" aria-label="fewer people">−</button>
+        <span class="val" id="pVal">1</span>
+        <button id="pPlus" aria-label="more people">+</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label>Least-experienced sailor</label>
+      <select id="pLevel">
+        <option value="9" selected>any — just browsing</option>
+        <option value="0">new to sailing</option>
+        <option value="1">ASA 101 · basic keelboat</option>
+        <option value="2">ASA 103 · basic coastal</option>
+        <option value="3">ASA 104+ · bareboat</option>
+      </select>
+    </div>
+    <div class="ctl">
+      <label>We want to</label>
+      <div class="rolechips">
+        <button class="chip on" data-role="either">either</button>
+        <button class="chip" data-role="learn">learn / captain</button>
+        <button class="chip" data-role="crew">crew · captain provided</button>
+      </div>
+    </div>
+    <div class="plan-summary ctl" id="pSummary"></div>
+    <button class="plan-reset" id="pReset">reset group</button>
+  </div>
+</section>
+
+<div class="bar" id="bar">
+  <input class="search" id="q" type="search" placeholder="search events…">
+  <span id="chips"></span>
+  <button class="chip toggle" id="tOpen">◉ open spots only</button>
+  <button class="chip toggle" id="tWait">show waitlists</button>
+  <span class="spacer"></span>
+  <span class="count" id="count"></span>
+</div>
+
+<nav class="monthnav" id="monthnav"></nav>
+<main id="agenda"></main>
+
+<footer>
+  Data pulled from FareHarbor public API · refresh with <code>python3 harvest.py</code> · booking links open fareharbor.com
+</footer>
+
+<script>
+window.__DATA__ = null;
+</script>
+<script>
+(function(){
+  const D = window.__DATA__;
+  if(!D){document.getElementById('agenda').innerHTML='<p class="empty">No data — run harvest.py first.</p>';return}
+
+  const items = D.items;
+  const todayStr = new Date().toISOString().slice(0,10);
+  // keep events that haven't fully ended
+  const events = D.events.filter(e => e.end_at.slice(0,10) >= todayStr);
+
+  const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const fmtTime = s => {
+    const h=+s.slice(11,13), m=s.slice(14,16);
+    const ap=h<12?'a':'p'; const hh=((h+11)%12)+1;
+    return hh+(m==='00'?'':':'+m)+ap;
+  };
+  const fmtShort = s => { const d=new Date(s.slice(0,10)+'T12:00:00'); return DOW[d.getDay()].slice(0,3)+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getDate(); };
+
+  // header
+  document.getElementById('sub').textContent =
+    'harvested '+D.harvested_at+' · window: today → +'+D.months_ahead+' months';
+
+  const cats = [...new Set(events.map(e=>items[e.item_pk].category))]
+    .filter(c=>c!=='Waitlists').sort();
+
+  // state
+  let state = {q:'', cat:'All', openOnly:false, waitlists:false,
+               people:1, level:9, role:'either'};
+  const groupActive = () => state.people>1 || state.level!==9 || state.role!=='either';
+
+  // Effective bookable seats per type: FareHarbor caps one booking at
+  // maximum_party_size, so what you can book NOW is min(remaining, max/booking).
+  // spots entries are [label, capacity_remaining, maximum_party_size].
+  const effSpots = e => (e.spots||[]).filter(s=>s[1]!=null)
+    .map(s=>({label:s[0], eff:(s[2]!=null?Math.min(s[1],s[2]):s[1]), raw:s[1], max:s[2]}));
+
+  // fits: experience, role, and enough bookable spots for the party
+  function fitsGroup(e){
+    if(!groupActive()) return true;
+    const it=items[e.item_pk];
+    if(state.level!==9 && it.min_level>state.level) return false;
+    if(state.role!=='either' && it.role!=='both' && it.role!==state.role) return false;
+    if(e.sold_out) return false;
+    if(!e.bookable && !e.phone_only) return false;
+    // seat check: prefer per-type counts (skipper/crew) when harvested
+    const typed=effSpots(e);
+    if(typed.length){
+      const sum=a=>a.reduce((t,s)=>t+s.eff,0);
+      const crew=typed.filter(s=>/crew/i.test(s.label));
+      const skip=typed.filter(s=>/skipper|captain/i.test(s.label));
+      if(state.role==='crew' && crew.length){
+        if(sum(crew)<state.people) return false;          // whole group rides as crew
+      }else if(state.role==='learn' && skip.length){
+        if(sum(skip)<1 || sum(typed)<state.people) return false; // need the helm + seats for all
+      }else{
+        if(sum(typed)<state.people) return false;
+      }
+    }else{
+      const c=e.capacity;
+      if(c!=null && c>0 && c<state.people) return false; // 0/null = capacity unknown
+    }
+    return true;
+  }
+
+  // group planner controls
+  const planEl=document.getElementById('plan');
+  const pVal=document.getElementById('pVal');
+  const roleLabels={either:'either',learn:'learning / captaining',crew:'crewing (captain provided)'};
+  const levelLabels={9:'any experience',0:'new to sailing',1:'ASA 101',2:'ASA 103',3:'ASA 104+'};
+  document.getElementById('pMinus').onclick=()=>{state.people=Math.max(1,state.people-1);pVal.textContent=state.people;render()};
+  document.getElementById('pPlus').onclick=()=>{state.people=Math.min(12,state.people+1);pVal.textContent=state.people;render()};
+  document.getElementById('pLevel').onchange=e=>{state.level=+e.target.value;render()};
+  planEl.querySelectorAll('[data-role]').forEach(b=>{
+    b.onclick=()=>{state.role=b.dataset.role;
+      planEl.querySelectorAll('[data-role]').forEach(x=>x.classList.toggle('on',x===b));
+      render()};
+  });
+  document.getElementById('pReset').onclick=()=>{
+    state.people=1;state.level=9;state.role='either';
+    pVal.textContent='1';
+    document.getElementById('pLevel').value='9';
+    planEl.querySelectorAll('[data-role]').forEach(x=>x.classList.toggle('on',x.dataset.role==='either'));
+    render();
+  };
+
+  function updatePlanSummary(){
+    const sEl=document.getElementById('pSummary');
+    planEl.classList.toggle('active',groupActive());
+    if(!groupActive()){
+      sEl.classList.remove('none');
+      sEl.innerHTML='set people, experience &amp; role to see what fits your group';
+      return;
+    }
+    const fit=events.filter(e=>fitsGroup(e) && (state.waitlists || items[e.item_pk].category!=='Waitlists')).length;
+    sEl.classList.toggle('none',fit===0);
+    sEl.innerHTML='<b>'+fit+'</b> sailings fit · '+state.people+
+      (state.people>1?' people':' person')+' · '+levelLabels[state.level]+' · '+roleLabels[state.role];
+  }
+
+  // chips
+  const chipsEl = document.getElementById('chips');
+  ['All',...cats].forEach(c=>{
+    const b=document.createElement('button');
+    b.className='chip'+(c==='All'?' on':'');
+    b.textContent=c;
+    b.onclick=()=>{state.cat=c;
+      chipsEl.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.textContent===c));
+      render();};
+    chipsEl.appendChild(b);
+  });
+  document.getElementById('q').oninput = e=>{state.q=e.target.value.toLowerCase();render()};
+  document.getElementById('tOpen').onclick = e=>{state.openOnly=!state.openOnly;e.target.classList.toggle('on',state.openOnly);render()};
+  document.getElementById('tWait').onclick = e=>{state.waitlists=!state.waitlists;e.target.classList.toggle('on',state.waitlists);render()};
+
+  function status(e){
+    if(e.sold_out) return ['full', items[e.item_pk].sold_out_text || 'Sold out'];
+    if(e.bookable){
+      const c=e.capacity;
+      return ['open', (c && c>0) ? c+' spot'+(c>1?'s':'') : 'open'];
+    }
+    if(e.phone_only) return ['call','call to book'];
+    return ['closed','closed'];
+  }
+
+  function visible(){
+    return events.filter(e=>{
+      const it=items[e.item_pk];
+      if(it.category==='Waitlists' && !state.waitlists) return false;
+      if(state.cat!=='All' && it.category!==state.cat) return false;
+      if(!fitsGroup(e)) return false;
+      if(state.openOnly){const [k]=status(e); if(k!=='open') return false;}
+      if(state.q && !(it.name+' '+e.headline).toLowerCase().includes(state.q)) return false;
+      return true;
+    });
+  }
+
+  function render(){
+    updatePlanSummary();
+    const list = visible();
+    document.getElementById('count').textContent = list.length+' of '+events.length+' events';
+
+    // stats (static, on all events)
+    const open = events.filter(e=>status(e)[0]==='open').length;
+    const full = events.filter(e=>e.sold_out).length;
+    document.getElementById('stats').innerHTML =
+      '<div>events<b>'+events.length+'</b></div>'+
+      '<div class="st-open">bookable<b>'+open+'</b></div>'+
+      '<div class="st-full">sold out<b>'+full+'</b></div>'+
+      '<div>programs<b>'+Object.values(items).filter(i=>events.some(e=>e.item_pk===i.pk)).length+'</b></div>';
+
+    // group by date
+    const byDate = new Map();
+    list.forEach(e=>{
+      const d=e.start_at.slice(0,10);
+      if(!byDate.has(d)) byDate.set(d,[]);
+      byDate.get(d).push(e);
+    });
+
+    const agenda=document.getElementById('agenda');
+    const nav=document.getElementById('monthnav');
+    agenda.innerHTML=''; nav.innerHTML='';
+    if(!byDate.size){agenda.innerHTML='<p class="empty">Nothing on the horizon matches — clear a filter or two.</p>';return}
+
+    let curMonth='';
+    [...byDate.keys()].sort().forEach(dateStr=>{
+      const d=new Date(dateStr+'T12:00:00');
+      const mKey=MONTHS[d.getMonth()]+' '+d.getFullYear();
+      if(mKey!==curMonth){
+        curMonth=mKey;
+        const id='m'+d.getFullYear()+'-'+d.getMonth();
+        const h=document.createElement('h2');
+        h.className='month'; h.id=id; h.textContent=mKey;
+        agenda.appendChild(h);
+        const a=document.createElement('a');
+        a.href='#'+id; a.textContent=MONTHS[d.getMonth()].slice(0,3)+' ’'+String(d.getFullYear()).slice(2);
+        nav.appendChild(a);
+      }
+      const row=document.createElement('div'); row.className='day';
+      const isToday=dateStr===todayStr;
+      row.innerHTML='<div class="datecell'+(isToday?' today':'')+'">'+
+        '<div class="dow">'+DOW[d.getDay()]+'</div>'+
+        '<div class="num">'+d.getDate()+'</div>'+
+        (isToday?'<div class="today-tag">TODAY</div>':'')+'</div>';
+      const lst=document.createElement('div'); lst.className='evlist';
+
+      byDate.get(dateStr)
+        .sort((a,b)=>a.start_at.localeCompare(b.start_at))
+        .forEach(e=>{
+          const it=items[e.item_pk];
+          const [k,label]=status(e);
+          const multi = e.end_at.slice(0,10)!==e.start_at.slice(0,10);
+          const card=document.createElement('div');
+          card.className='ev'+(k==='full'||k==='closed'?' dim':'');
+          // seat-type breakdown (e.g. skipper / crew) when we have it and
+          // the sailing isn't flat-out sold out or closed
+          let pills;
+          const typed=effSpots(e);
+          if((k==='open'||k==='call') && typed.length){
+            pills=typed.map(s=>{
+              const capped = s.max!=null && s.raw>s.max;
+              const tip = capped ? ' title="'+s.raw+' seats remain · booking limited to '+s.max+' per party"' : '';
+              return '<span class="pill '+(s.eff>0?'open':'full')+'"'+tip+'>'+
+                s.label.toLowerCase()+' '+s.eff+(capped?'*':'')+'</span>';
+            }).join('');
+            if(k==='call') pills+='<span class="pill call">call to book</span>';
+          }else{
+            pills='<span class="pill '+k+'">'+label+'</span>';
+          }
+          card.innerHTML=
+            '<span class="time">'+fmtTime(e.start_at)+'–'+fmtTime(e.end_at)+'</span>'+
+            '<span><span class="name">'+it.name+'</span>'+
+              (e.headline && e.headline!==it.name?' <span class="headline">'+e.headline+'</span>':'')+
+              (multi?' <span class="multi">⟶ multi-day · ends '+fmtShort(e.end_at)+'</span>':'')+
+            '</span>'+
+            '<span class="grow"></span>'+
+            '<span class="cat">'+it.category+'</span>'+
+            pills+
+            (k==='open'?'<a class="book" target="_blank" rel="noopener" href="'+e.book_url+'">book ↗</a>':'');
+          lst.appendChild(card);
+        });
+      row.appendChild(lst);
+      agenda.appendChild(row);
+    });
+  }
+  render();
+})();
+</script>
+</body>
+</html>
