@@ -453,7 +453,7 @@ window.__DATA__ = null;
 
   // header
   document.getElementById('sub').textContent =
-    'harvested '+D.harvested_at+' · window: today → +'+D.months_ahead+' months';
+    'updated '+D.harvested_at+' · window: today → +'+D.months_ahead+' months';
 
   const cats = [...new Set(events.map(e=>items[e.item_pk].category))]
     .filter(c=>c!=='Waitlists').sort();
