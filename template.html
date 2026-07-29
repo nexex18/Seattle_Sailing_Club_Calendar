@@ -470,7 +470,12 @@ window.__DATA__ = null;
     if(!groupActive()) return true;
     const it=items[e.item_pk];
     if(state.level!==9 && it.min_level>state.level) return false;
-    if(state.role!=='either' && it.role!=='both' && it.role!==state.role) return false;
+    if(state.role!=='either' && it.role!=='both' && it.role!==state.role){
+      // seat types override the item-level role: e.g. flotillas classify as
+      // "crew" events but sell Skipper seats a qualified member can book
+      const want = state.role==='learn' ? /skipper|captain/i : /crew/i;
+      if(!(e.spots||[]).some(s=>want.test(s[0]))) return false;
+    }
     if(e.sold_out) return false;
     if(!e.bookable && !e.phone_only) return false;
     // seat check: prefer per-type counts (skipper/crew) when harvested
