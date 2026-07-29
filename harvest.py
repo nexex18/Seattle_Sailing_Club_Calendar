@@ -21,6 +21,7 @@ import argparse
 import datetime as dt
 import json
 import sys
+from zoneinfo import ZoneInfo
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -259,7 +260,7 @@ def main():
 
     payload = {
         "company": "Seattle Sailing Club",
-        "harvested_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "harvested_at": dt.datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%Y-%m-%d %H:%M %Z"),
         "months_ahead": args.months,
         "items": item_info,
         "events": sorted(events.values(), key=lambda e: e["start_at"]),
